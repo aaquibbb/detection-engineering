@@ -1,2 +1,2 @@
-# detection-engineering
+# Detection-Engineering
 Detection Rules
