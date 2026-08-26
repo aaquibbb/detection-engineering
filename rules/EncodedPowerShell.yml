@@ -1,5 +1,5 @@
 title: Encoded PowerShell Command Execution
-id= TODO-UUID
+id: TODO-UUID
 description: >
     Detects PowerShell executing a base64-encoded command, identified via the
     binary's PE metadata rather than its filename on disk. Encoded commands
@@ -15,10 +15,10 @@ references:
 author: Aaquib
 date: 2024-06-19
 tags:
-  -attack.execution
-  -attack.t1059.001
-  -attack.defense_evasion
-  -attack.t1027
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027
 logsource:
   product: windows
   category: process_creation
@@ -34,6 +34,6 @@ detection:
 falsepositives:
   - Software deployment tooling (SCCM, PDQ) invoking encoded payloads from batch wrappers
   - Legitimate administrative scripts that use encoded commands for obfuscation or to avoid command-line length limitations
-  -Backup and monitoring agents that wrap PowerShell in cmd for scheduling
+  - Backup and monitoring agents that wrap PowerShell in cmd for scheduling
 level: medium
 status: experimental
