@@ -28,8 +28,8 @@ detection:
       - 'PowerShell.EXE' 
       - 'pwsh.dll'
   selection_encoded:
-    CommandLine| re:
-      - '\s-[eE][ncodedmalsCP]*\s+[A-Za-z0-9+/=]{15,}'
+    CommandLine|re:
+      - '(?i)\s[-/–—―]e[ncodema]*\s+[A-Za-z0-9+/=]{15,}'
   condition: all of selection_*
 falsepositives:
   - Software deployment tooling (SCCM, PDQ) invoking encoded payloads from batch wrappers
