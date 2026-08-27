@@ -118,3 +118,25 @@ DeviceProcessEvents
 High volume across a high number of hosts indicates infrastructure, not an adversary. Those results become the allowlist. What the tail looks like after tuning determines whether this ships as an alert or stays a scheduled hunt.
 
 One further trade-off: regex is not handled efficiently by every SIEM backend. An enumerated list of anchored variants (`' -e '`, `' -ec '`, `' -enc '`, and so on) converts cleanly everywhere and reads more easily, at the cost of eventually missing a variant nobody thought of. The regex is the better choice here, but the alternative is worth knowing.
+
+## Testing
+
+Validated on a Windows test host running Sysmon (SwiftOnSecurity config).
+
+**Method.** A benign encoded command (`Write-Host "detection test"`) was executed, the resulting Sysmon EID 1 was pulled from the event log, and `CommandLine` and `OriginalFileName` were extracted from the event XML and matched against the rule logic directly.
+
+**Confirmed.** `OriginalFileName` reports `PowerShell.EXE` as expected, and the rule matched the live event.
+
+**Two evasions found during testing, both now fixed:**
+
+`powershell.exe` accepts `/` as a parameter prefix, not only `-`. The command `powershell.exe /e <base64>` executes identically to `-e` and was not matched by the original pattern. PowerShell also accepts Unicode dash characters (en dash, em dash, horizontal bar) in the same position.
+
+The original pattern was case-sensitive in its parameter matching, so `-ENC` did not match. PowerShell parameter binding is case-insensitive and accepts any unambiguous prefix.
+
+**Corrected pattern:**
+
+```
+(?i)\s[-/–—―]e[ncodema]*\s+[A-Za-z0-9+/=]{15,}
+```
+
+Verified against `-e`, `-ec`, `-enc`, `-ENC`, `-EncodedCommand`, `/e`, and en-dash variants, and confirmed not to match `-ExecutionPolicy` or `-ErrorAction`.
