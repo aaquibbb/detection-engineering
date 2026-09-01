@@ -1,5 +1,5 @@
 title: Encoded PowerShell Command Execution
-id: TODO-UUID
+id: e1472ef4-e787-42d0-bd10-e65c00f8978e
 description: >
     Detects PowerShell executing a base64-encoded command, identified via the
     binary's PE metadata rather than its filename on disk. Encoded commands
