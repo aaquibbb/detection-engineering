@@ -2,9 +2,9 @@
 
 Sigma rules with the reasoning behind them.
 
-One rule per week, each with a write-up covering **why those fields were chosen**, **how an adversary evades it**, and **what legitimate activity sets it off**. Where a rule hasn't been validated against production data, it says so.
+Build & Break Sigma rules, each with a write-up covering **why those fields were chosen**, **how an adversary evades it**, and **what legitimate activity sets it off**. Where a rule hasn't been validated against production data, it says so.
 
-The goal isn't volume. Public rule dumps are easy to produce and tell a reader nothing about whether the author can think. The write-ups are the point; the rules are the artifact they're reasoning about.
+The goal isn't volume. Public rule dumps are easy to produce and tell a reader nothing about whether the author can think. The write-ups are the point; the rules are the artefact they're reasoning about.
 
 ---
 
