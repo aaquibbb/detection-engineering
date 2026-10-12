@@ -1,0 +1,58 @@
+title: Office Application Spawning Script Host, LOLBin or Shell
+id: 42cc9ae1-7162-4649-b2fe-32c23649a7a9
+status: experimental
+description: >
+    Detects a Microsoft Office application spawning a script host, a
+    living-off-the-land binary, or a command shell. Office applications have no
+    legitimate reason to launch mshta, regsvr32, certutil or a scripting engine
+    during normal document use, so this parent-child relationship is a strong
+    indicator of macro or embedded-object code execution following user
+    interaction with a malicious document (T1204.002). Child processes are split
+    into two confidence tiers: the script hosts and download LOLBins are
+    near-certain signals, while cmd and PowerShell are lower-confidence because
+    Office spawns them legitimately more often.
+references:
+    - https://attack.mitre.org/techniques/T1204/002/
+    - https://attack.mitre.org/techniques/T1059/
+author: Aaquib
+date: 2026/10/12
+tags:
+    - attack.execution
+    - attack.t1204.002
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_office_apps:
+        ParentImage|endswith:
+            - '\winword.exe'
+            - '\excel.exe'
+            - '\powerpnt.exe'
+            - '\msaccess.exe'
+            - '\mspub.exe'
+            - '\onenote.exe'
+    selection_high_confidence:
+        Image|endswith:
+            - '\mshta.exe'
+            - '\regsvr32.exe'
+            - '\rundll32.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+    selection_low_confidence:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\cmd.exe'
+    condition: selection_office_apps and (selection_high_confidence or selection_low_confidence)
+falsepositives:
+    - Office add-ins and third-party plugins that legitimately invoke rundll32 or
+      a scripting engine during startup or printing. rundll32 is the most likely
+      benign hit in the high-confidence tier and should be watched during baselining.
+    - Enterprise document templates or spreadsheets with sanctioned macros that
+      shell out to cmd or PowerShell for internal automation. This is the dominant
+      expected source in the low-confidence tier.
+    - Software that embeds the Office engine and drives it programmatically.
+level: high
