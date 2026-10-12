@@ -12,8 +12,9 @@ The goal isn't volume. Public rule dumps are easy to produce and tell a reader n
 
 | # | Rule | Technique | Status | Write-up |
 |---|---|---|---|---|
-| 01 | [Encoded PowerShell Command Execution](rules/proc_creation_win_powershell_encoded_command.yml) | T1059.001, T1027 | `test` | [Field Selection](writeups/field-selection.md) |
-| 02 | [Browser Credential Store Copied Outside Profile Directory](rules/file_event_win_browser_credential_store_copied.yml) | T1555.003 | `experimental` | [Field Selection](writeups/browser-credential-theft.md) |
+| 01 | [Encoded PowerShell Command Execution](rules/proc_creation_win_powershell_encoded_command.yml) | T1059.001, T1027 | `test` | [Detecting what adversaries can't change](writeups/field-selection.md) |
+| 02 | [Browser Credential Store Copied Outside Profile Directory](rules/file_event_win_browser_credential_store_copied.yml) | T1555.003 | `experimental` | [Browser Credential Theft](writeups/browser-credential-theft.md) |
+| 02 | [Office Application Spawning Script Host, LOLBin or Shell](rules/proc_creation_win_office_spawning_lolbin.yml) | T1204.002, T1059 | `experimental` | [Office LOLBins: Tiered Detection](writeups/office_app_lolbin.md) |
 ---
 
 ## Approach
