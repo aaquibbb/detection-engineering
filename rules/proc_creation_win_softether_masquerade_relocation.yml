@@ -1,0 +1,32 @@
+title: SoftEther VPN Binary Running Outside Its Install Directory
+id: 3bbe2194-8867-4d42-8461-623b31207f34
+status: experimental
+description: >
+    Detects a binary whose PE metadata identifies it as SoftEther VPN running from a path outside the legitimate SoftEther install directory. Attackers bring SoftEther as a legitimate tunnelling tool to evade AV, then rename and relocate it to blend in with system binaries; the mismatch between its SoftEther metadata and its non-standard location is the signal.
+references:
+    - https://attack.mitre.org/techniques/T1036/005/
+    - https://attack.mitre.org/techniques/T1572/
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-281a
+author: Aaquib
+date: 2026/08/26
+tags:
+    - attack.defense-evasion
+    - attack.t1036.005
+    - attack.command-and-control
+    - attack.t1572
+logsource: 
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Product|contains:
+      - 'SoftEther'
+  filter:
+    Image|contains:
+      - '\SoftEther VPN'
+  condition: selection and not filter
+falsepositives:
+  - SoftEther portable edition run from a USB drive or user directory with no formal install
+  - Administrator installation to a non-standard path not matching the install-folder filter
+  - Security or forensic tooling that copies the binary elsewhere for analysis
+level: high
