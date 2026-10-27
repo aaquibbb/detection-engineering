@@ -56,3 +56,4 @@ falsepositives:
       expected source in the low-confidence tier.
     - Software that embeds the Office engine and drives it programmatically.
 level: high
+status: tested in a lab environment
