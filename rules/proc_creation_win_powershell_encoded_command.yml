@@ -36,4 +36,4 @@ falsepositives:
   - Legitimate administrative scripts that use encoded commands for obfuscation or to avoid command-line length limitations
   - Backup and monitoring agents that wrap PowerShell in cmd for scheduling
 level: medium
-status: experimental
+status: tested in a lab environment
