@@ -1,0 +1,41 @@
+title: DCSync Secret Replication Requested by Non-Domain-Controller Account
+id: 96ab4b31-ad31-435f-9dfe-1999b7790e95
+status: experimental
+description: >
+    Detects a Directory Replication Service request for secret domain data
+    (the DS-Replication-Get-Changes and Get-Changes-All extended rights)
+    originating from an account that is not a domain controller. DCSync abuses
+    replication to extract password hashes - including krbtgt and domain admin
+    hashes - directly from a DC without touching its disk or running code on it.
+    Legitimate replication is performed only by domain controller machine
+    accounts; a replication-of-secrets request from a user or service account is
+    credential theft. The rule keys on the immutable schema GUIDs of the
+    replication rights, which an attacker cannot change, and excludes machine
+    accounts (a proxy for domain controllers).
+references:
+    - https://attack.mitre.org/techniques/T1003/006/
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-281a
+author: Aaquib
+date: 2026/11/06
+tags:
+    - attack.credential-access
+    - attack.t1003.006
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4662
+        AccessMask: '0x100'
+        Properties|contains:
+            - '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2'   # DS-Replication-Get-Changes
+            - '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'   # DS-Replication-Get-Changes-All (secrets)
+            - '89e95b76-444d-4c62-991a-0facbeda640c'   # DS-Replication-Get-Changes-In-Filtered-Set
+    filter_dc_accounts:
+        SubjectUserName|endswith: '$'
+    condition: selection and not filter_dc_accounts
+falsepositives:
+    - Domain controller accounts performing normal replication (excluded by the machine-account filter).
+    - Azure AD Connect / Entra Connect sync servers, which legitimately replicate directory data under a service account. Baseline and allowlist the specific sync account.
+    - Backup, disaster-recovery and identity-governance tooling granted replication rights. These run under non-machine service accounts, so they bypass the filter and must be allowlisted per environment.
+level: high
