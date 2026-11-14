@@ -17,6 +17,7 @@ The goal isn't volume. Public rule dumps are easy to produce and tell a reader n
 | 03 | [Office Application Spawning Script Host, LOLBin or Shell](rules/proc_creation_win_office_spawning_lolbin.yml) | T1204.002, T1059 | `test - validated` | [Office LOLBins: Tiered Detection](writeups/office_app_lolbin.md) |
 | 04 | [SoftEther VPN Binary Running Outside Its Install Directory](rules/proc_creation_win_softether_masquerade_relocation.yml) | T1036.005, T1572 | `test - validated` | [SoftEther VPN: Masquerading](writeups/softether-masquerade.md) |
 | 05 | [DCSync Secret Replication Requested by Non-Domain-Controller Account](rules/security_win_dcsync_replication_from_non_dc.yml) | T1003.006 | `test - validated` | [DCSync Replication](writeups/dcsync-non-dc.md) |
+| 05 | [Registry Run Key Persistence by Suspicious Writer or Target Path](rules/registry_set_win_run_key_suspicious_writer.yml) | T1547.001 | `test - validated` | [Registry Run Key Persistence](writeups/run-key-persistance.md) |
 ---
 
 ## Approach
