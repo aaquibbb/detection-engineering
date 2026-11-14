@@ -1,0 +1,50 @@
+title: Registry Run Key Persistence by Suspicious Writer or Target Path
+id: 104d8e62-e5d1-4901-b07b-c26db9a90ca4
+status: test
+description: >
+    Detects a Run or RunOnce autostart value being written to the registry where
+    either the writing process is a living-off-the-land binary or script host, or
+    the value being written points to a user-writable or temporary location. Run
+    keys execute automatically at logon and are one of the most common persistence
+    mechanisms (T1547.001). Pairing the Run-key write with a suspicious writer or a
+    suspicious target path separates likely persistence from the large volume of
+    legitimate autostart registration.
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+author: Aaquib
+date: 2026/11/14
+tags:
+    - attack.persistence
+    - attack.t1547.001
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_target:
+        TargetObject|contains:
+            - '\CurrentVersion\Run'
+    selection_image:
+        Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\mshta.exe'
+            - '\rundll32.exe'
+            - '\regsvr32.exe'
+            - '\certutil.exe'
+            - '\wmic.exe'
+            - '\reg.exe'
+    selection_path:
+        Details|contains:
+            - '\Users\Public\'
+            - 'C:\Windows\Temp\'
+            - '\AppData\Local\Temp\'
+            - '\Downloads\'
+    condition: selection_target and (selection_image or selection_path)
+falsepositives:
+    - Administrative scripts and software installers that register autostart entries via reg.exe or PowerShell. This is the dominant source and must be baselined before shipping as an alert.
+    - GPO logon scripts and IT management or deployment tooling.
+    - An installer that briefly stages a payload in a temp or Downloads path before registering it in a Run key.
+level: medium
