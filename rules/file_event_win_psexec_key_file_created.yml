@@ -1,0 +1,35 @@
+title: PsExec Encryption Key File Created in System Root
+id: a1f6d3b2-9c4e-4f82-b7a1-3e6c8d2f5b94
+status: test
+description: |
+    Detects creation of the PSEXEC-<source-hostname>-<id>.key encryption key file
+    that Sysinternals PsExec drops in C:\Windows on the target host. The PSEXEC-
+    prefix is a constant compiled into the binary and is not derived from the
+    service name, so it survives the -r service-rename flag - a higher-fidelity,
+    rename-resistant artefact than the PSEXESVC service or binary name. Detects
+    the default Sysinternals tool; blind to non-Sysinternals implementations
+    (Impacket, Metasploit) and to a binary patched to alter the prefix.
+references:
+    - https://attack.mitre.org/techniques/T1569/002/
+    - https://attack.mitre.org/techniques/T1021/002/
+author: Aaquib
+date: 2026-11-21
+tags:
+    - attack.lateral-movement
+    - attack.execution
+    - attack.t1569.002
+    - attack.t1021.002
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection:
+        TargetFilename|startswith: 'C:\Windows\PSEXEC-'
+        TargetFilename|endswith: '.key'
+    condition: selection
+falsepositives:
+    - Authorised administrative or software-deployment use of PsExec. This fires on
+      all PsExec, authorised or not - a benign true positive, not a false one.
+      Baseline and allowlist known admin source hosts (the source hostname is in the
+      key filename) and accounts before alerting.
+level: high
